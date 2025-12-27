@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { Modal } from "bootstrap"; //加入Bootstrap function
 //前面放載入外部資源，後面放內部的
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
@@ -7,19 +8,46 @@ import "./App.css";
 
 function App() {
   const [count, setCount] = useState(0);
+  //設定使用Bootstrap function
+  const modalRef = useRef(null);
+  const customModal = useRef(null);
 
+  //初始化
   useEffect(() => {
     (async () => {
       const res = await axios.get("https://randomuser.me/api/");
       console.log(res);
+      //也可以設定在初始化後打開
+      openModal();
+      //也可以設定打開之後過兩秒自動關閉：
+      setTimeout(() => {
+        closeModal();
+      }, 2000);
     })();
   }, []);
 
+  useEffect(() => {
+    // console.log(modalRef.current); //測試看有沒有選取到要的元素
+    customModal.current = new Modal(modalRef.current); //要展開按鈕的方法
+    // customModal.current.show(); //1.直接展開視窗的方法
+  }, []);
+
+  // 2.使用原本按鈕後觸發視窗的方法
+  const openModal = () => {
+    customModal.current.show();
+  };
+  // 3.設定一個自動關閉方法
+  const closeModal = () => {
+    customModal.current.hide();
+  };
+
+  // 2.使用原本按鈕後觸發視窗的方法+onClick={() => openModal()}
   return (
     <>
       <button
         type="button"
         className="btn btn-primary"
+        onClick={() => openModal()}
         data-bs-toggle="modal"
         data-bs-target="#exampleModal"
       >
@@ -28,6 +56,7 @@ function App() {
 
       <div
         className="modal fade"
+        ref={modalRef}
         id="exampleModal"
         tabIndex="-1"
         aria-labelledby="exampleModalLabel"
