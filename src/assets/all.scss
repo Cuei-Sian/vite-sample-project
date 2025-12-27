@@ -1,4 +1,7 @@
-$primary-bg: green;
-body {
-  background-color: $primary-bg;
-}
+@import "bootstrap/scss/functions";
+
+$primary: yellow;
+
+@import "./variables";
+
+@import "bootstrap/scss/bootstrap.scss";
